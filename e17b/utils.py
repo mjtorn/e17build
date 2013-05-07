@@ -4,6 +4,8 @@ import os
 
 import shutil
 
+import subprocess
+
 import tarfile
 
 import urllib2
@@ -114,6 +116,17 @@ def remove_if_exists(dir_):
     if os.path.exists(dir_):
         print 'Delete %s' % dir_
         shutil.rmtree(dir_)
+
+def run(cmd, dir_):
+    """Try running a command in a directory, raise exception on failure
+    """
+
+    print '[%s] %s' % (dir_, ' '.join(cmd))
+    retval = subprocess.call(cmd, cwd=dir_)
+
+    if retval != 0:
+        raise RuntimeError('%s exited %d' % (' '.join(cmd), retval))
+
 
 # EOF
 
