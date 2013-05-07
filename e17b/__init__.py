@@ -60,7 +60,7 @@ def main(args):
 
     package_dict = get_package_dict(RELEASES_URL)
 
-    download_packages(SRC_DL_DIR, RELEASES_URL, package_dict, force_download=True)
+    download_packages(SRC_DL_DIR, RELEASES_URL, package_dict)
 
 # EOF
 
