@@ -9,7 +9,7 @@ import e17b
 
 DEFAULTS = {
     'srcdir': os.path.join(os.path.expanduser('~'), 'src', 'e17'),
-    'instpath': os.path.join(os.path.expanduser('~'), 'e17build'),
+    'instpath': os.path.join(os.path.expanduser('~'), 'e17'),
     'thread_count': e17b.utils.get_thread_count()
 }
 
