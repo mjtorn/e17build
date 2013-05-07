@@ -2,6 +2,10 @@
 
 import os
 
+import shutil
+
+import tarfile
+
 import urllib2
 
 DOWNLOAD_RETRIES = 3
@@ -78,6 +82,32 @@ def safe_tar_files(tar, verbose=False):
             print '[%8d] %s' % (file_info.size, file_info.name)
 
         yield file_info
+
+def verify_clean_build_dir(dst, tar):
+    """Where does this tar extract? Remove old, if exists
+    Returns the name of the dir
+    """
+
+    found_main_dir = None
+    for file_info in tar:
+        if file_info.type == tarfile.DIRTYPE:
+            dir_name = file_info.name
+            elems = os.path.split(dir_name)
+            if len(elems) == 2 and elems[0] == '':
+                if found_main_dir is not None:
+                    raise NotImplementedError('Two dirs in %s' % tar.name)
+
+                found_main_dir = dir_name
+
+    if found_main_dir is None:
+        raise ValueError('We need a directory to work with %s' % tar.name)
+
+    dst_dir = os.path.join(dst, found_main_dir)
+    if os.path.exists(dst_dir):
+        print 'Delete old %s' % dst_dir
+        shutil.rmtree(dst_dir)
+
+    return dst_dir
 
 # EOF
 
