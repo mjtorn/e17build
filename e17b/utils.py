@@ -127,6 +127,23 @@ def run(cmd, dir_):
     if retval != 0:
         raise RuntimeError('%s exited %d' % (' '.join(cmd), retval))
 
+def setup_environment(dst_dir):
+    """Sets the build environment.
+    """
+
+    paths = (
+        ('LD_LIBRARY_PATH', os.path.join(dst_dir, 'lib')),
+        ('PKG_CONFIG_PATH', os.path.join(dst_dir, 'lib', 'pkgconfig')),
+    )
+
+    # This is mostly to work through my crap, but it doesn't kill anything
+    for env_var, path in paths:
+        env_val = os.environ.get(env_var, '')
+        env_vals = env_val.split(':')
+        env_vals = [val for val in env_vals if not 'e17' in val]
+        env_vals.insert(0, path)
+
+        os.environ[env_var] = ':'.join(env_vals)
 
 # EOF
 
