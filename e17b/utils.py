@@ -168,5 +168,15 @@ def setup_environment(dst_dir):
     ld_flags = '%s -L%s' % (ld_flags, ld_path)
     os.environ['LDFLAGS'] = ld_flags.strip()
 
+def get_thread_count():
+    """Get the thread count for make -j
+    """
+
+    f = open(os.path.join(os.path.sep, 'proc', 'cpuinfo'), 'rb')
+    cpus = [l for l in f.readlines() if l.startswith('processor')]
+
+    # And +1 for io sleeping
+    return len(cpus) + 1
+
 # EOF
 
