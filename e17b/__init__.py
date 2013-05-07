@@ -2,6 +2,8 @@
 
 from pyquery import PyQuery as pq
 
+from . import utils
+
 import os
 
 RELEASES_URL = 'http://download.enlightenment.org/releases/'
@@ -17,7 +19,9 @@ def get_package_list(mirror):
     url = pq(mirror)
 
     links = url('a')
-    print links
+    links = [pq(l) for l in links if utils.is_interesting(l)]
+    
+    print [l.attr('href') for l in links]
 
     return packages
 
