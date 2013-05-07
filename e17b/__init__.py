@@ -33,13 +33,34 @@ def get_package_dict(mirror):
 
     return packages
 
+def download_packages(dst, mirror, packages, force_download=False):
+    """Download from mirror
+    Optionally force to download even if local file exists
+    """
+
+    # This could be smarter
+    if not os.path.exists(dst):
+        os.mkdir(dst)
+
+    # Want to start building after download with multiprocessing...
+    for pkg, pkg_versions in packages.items():
+        latest_pkg = pkg_versions[-1]
+        url = '%s%s' % (mirror, latest_pkg)
+        print 'Downloading %s' % url
+
+        dst_file = os.path.join(dst, latest_pkg)
+        if not force_download and os.path.exists(dst_file):
+            print 'File exists: %s' % dst_file
+        else:
+            utils.download(url, dst_file)
+
 def main(args):
     """Tie all the pieces together to build e17
     """
 
     package_dict = get_package_dict(RELEASES_URL)
-    for k, v in package_dict.items():
-        print k, v
+
+    download_packages(SRC_DL_DIR, RELEASES_URL, package_dict, force_download=True)
 
 # EOF
 
