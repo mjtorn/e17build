@@ -65,3 +65,12 @@ Oh you meant this help::
 
 Note the defaults are dynamically generated and may differ for you.
 
+And for your .xinitrc::
+
+  export PATH=$HOME/e17/bin:$PATH
+  export LD_LIBRARY_PATH=$HOME/e17/lib:$LD_LIBRARY_PATH
+  export PYTHONPATH=$HOME/e17/lib/python2.6/site-packages:$PYTHONPATH
+  
+  exec $HOME/e17/bin/enlightenment_start
+
+
