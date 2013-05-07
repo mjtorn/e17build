@@ -103,9 +103,7 @@ def verify_clean_build_dir(dst, tar):
         raise ValueError('We need a directory to work with %s' % tar.name)
 
     dst_dir = os.path.join(dst, found_main_dir)
-    if os.path.exists(dst_dir):
-        print 'Delete old %s' % dst_dir
-        shutil.rmtree(dst_dir)
+    remove_if_exists(dst_dir)
 
     return dst_dir
 
