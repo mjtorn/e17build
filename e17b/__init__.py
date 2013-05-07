@@ -162,5 +162,11 @@ def main(args):
     download_packages(src_dir, mirror, package_dict)
     build_packages(package_dict, src_dir, instpath, thread_count=thread_count)
 
+    print
+    print 'DONE!'
+
+    print
+    print '(Remember to chown root and chmod u+s,a+x the freqset executable)'
+
 # EOF
 
