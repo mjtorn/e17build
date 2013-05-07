@@ -24,6 +24,8 @@ BUILD_ORDER = (
 
 BUILD_DST_DIR = os.path.join(os.path.expanduser('~'), 'e17build')
 
+BUILD_THREAD_COUNT = utils.get_thread_count()
+
 def get_package_dict(mirror):
     """Which packages are available in mirror?
     """
@@ -66,7 +68,7 @@ def download_packages(dst, mirror, packages, force_download=False):
         else:
             utils.download(url, dst_file)
 
-def build_packages(packages, dst):
+def build_packages(packages, dst, thread_count=BUILD_THREAD_COUNT):
     """Builder. Contains extraction too.
     """
 
@@ -98,14 +100,14 @@ def build_packages(packages, dst):
             tar.extractall(path=dst, members=utils.safe_tar_files(tar, verbose=True))
             tar.close()
 
-        build_package(dst_dir, BUILD_DST_DIR)
+        build_package(dst_dir, BUILD_DST_DIR, thread_count=thread_count)
 
-def build_package(src_dir, dst_dir):
+def build_package(src_dir, dst_dir, thread_count=BUILD_THREAD_COUNT):
     """Build source into destination
     """
 
     conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
-    make_cmd = ['make']
+    make_cmd = ['make', '-j%d' % thread_count]
     install_cmd = ['make', 'install']
 
     utils.run(conf_cmd, src_dir)
@@ -119,7 +121,7 @@ def main(args):
     package_dict = get_package_dict(RELEASES_URL)
 
     download_packages(SRC_DL_DIR, RELEASES_URL, package_dict)
-    build_packages(package_dict, SRC_DL_DIR)
+    build_packages(package_dict, SRC_DL_DIR, thread_count=BUILD_THREAD_COUNT)
 
 # EOF
 
