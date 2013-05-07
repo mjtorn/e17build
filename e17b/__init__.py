@@ -81,6 +81,8 @@ def build_packages(packages, dst, thread_count=BUILD_THREAD_COUNT):
     for pkg in BUILD_ORDER:
         assert packages.has_key(pkg), '%s missing' % pkg
 
+    print 'Packages: %s' % ', '.join(BUILD_ORDER)
+
     required_set = set(BUILD_ORDER)
     available_set = set(packages.keys())
 
@@ -88,7 +90,7 @@ def build_packages(packages, dst, thread_count=BUILD_THREAD_COUNT):
     extras = available_set.difference(required_set)
     print 'Extra packages: %s' % ', '.join(extras)
 
-    # TODO: Maybe store only the latest version after download
+    # TODO: Maybe store only the latest version in packages dict after download
     for pkg in BUILD_ORDER + tuple(extras):
         pkg_file = packages[pkg][-1]
         path = os.path.join(dst, pkg_file)
