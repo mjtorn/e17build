@@ -22,6 +22,8 @@ BUILD_ORDER = (
     'enlightenment',
 )
 
+BUILD_DST_DIR = os.path.join(os.path.expanduser('~'), 'e17build')
+
 def get_package_dict(mirror):
     """Which packages are available in mirror?
     """
@@ -68,6 +70,11 @@ def build_packages(packages, dst):
     """Builder. Contains extraction too.
     """
 
+    utils.remove_if_exists(BUILD_DST_DIR)
+    os.mkdir(BUILD_DST_DIR)
+
+    utils.setup_environment(BUILD_DST_DIR)
+
     # Maybe this should be smarter too :D
     for pkg in BUILD_ORDER:
         assert packages.has_key(pkg), '%s missing' % pkg
@@ -90,6 +97,20 @@ def build_packages(packages, dst):
             dst_dir = utils.verify_clean_build_dir(dst, tar)
             tar.extractall(path=dst, members=utils.safe_tar_files(tar, verbose=True))
             tar.close()
+
+        build_package(dst_dir, BUILD_DST_DIR)
+
+def build_package(src_dir, dst_dir):
+    """Build source into destination
+    """
+
+    conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
+    make_cmd = ['make']
+    install_cmd = ['make', 'install']
+
+    utils.run(conf_cmd, src_dir)
+    utils.run(make_cmd, src_dir)
+    utils.run(install_cmd, src_dir)
 
 def main(args):
     """Tie all the pieces together to build e17
