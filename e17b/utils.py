@@ -66,11 +66,18 @@ def safe_tar_files(tar, verbose=False):
     """Although we trust e17 devs, be safe ;)
     """
 
+    unsafe = (os.sep, '..',)
+
     for file_info in tar:
-        if not file_info.name.startswith(os.sep):
-            if verbose:
-                print '[%8d] %s' % (file_info.size, file_info.name)
-            yield file_info
+        for s in unsafe:
+            if file_info.name.startswith(s):
+                print 'Malicious file found! %s' % file_info.name
+                raise IOError('Refusing %s' % file_info.name)
+
+        if verbose:
+            print '[%8d] %s' % (file_info.size, file_info.name)
+
+        yield file_info
 
 # EOF
 
