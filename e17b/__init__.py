@@ -18,6 +18,10 @@ BUILD_ORDER = (
     'enlightenment',
 )
 
+SKIP_BUILD = (
+    'evil',
+)
+
 def get_package_dict(mirror):
     """Which packages are available in mirror?
     """
@@ -107,6 +111,11 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
 
     # TODO: Maybe store only the latest version in packages dict after download
     for pkg in BUILD_ORDER + tuple(extras):
+        # TODO: This also needs to be saner, but now I got to get this crap finished
+        if pkg in SKIP_BUILD:
+            print 'Skipping %s' % pkg
+            continue
+
         pkg_file = packages[pkg][-1]
         path = os.path.join(dst_base_path, pkg_file)
         print path
