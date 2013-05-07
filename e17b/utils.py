@@ -109,5 +109,13 @@ def verify_clean_build_dir(dst, tar):
 
     return dst_dir
 
+def remove_if_exists(dir):
+    """Does what it says it does
+    """
+
+    if os.path.exists(dir):
+        print 'Delete %s' % dir
+        shutil.rmtree(dir)
+
 # EOF
 
