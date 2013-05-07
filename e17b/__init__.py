@@ -12,23 +12,17 @@ import os
 
 import tarfile
 
-RELEASES_URL = 'http://download.enlightenment.org/releases/'
-
-SRC_DL_DIR = os.path.join(os.path.expanduser('~'), 'src', 'e17')
-
 BUILD_ORDER = (
     'eina', 'eet', 'evas', 'evas_generic_loaders', 'ecore', 'eio', 'embryo',
     'edje', 'efreet', 'e_dbus', 'eeze', 'emotion', 'ethumb', 'elementary',
     'enlightenment',
 )
 
-BUILD_DST_DIR = os.path.join(os.path.expanduser('~'), 'e17build')
-
-BUILD_THREAD_COUNT = utils.get_thread_count()
-
 def get_package_dict(mirror):
     """Which packages are available in mirror?
     """
+
+    print 'Getting from URL %s' % mirror
 
     packages = {}
 
@@ -68,14 +62,16 @@ def download_packages(dst, mirror, packages, force_download=False):
         else:
             utils.download(url, dst_file)
 
-def build_packages(packages, dst, thread_count=BUILD_THREAD_COUNT):
+def build_packages(packages, dst_base_path, instpath, thread_count=1):
     """Builder. Contains extraction too.
     """
 
-    utils.remove_if_exists(BUILD_DST_DIR)
-    os.mkdir(BUILD_DST_DIR)
+    print 'Attempt to build with thread count %d' % thread_count
 
-    utils.setup_environment(BUILD_DST_DIR)
+    utils.remove_if_exists(instpath)
+    os.mkdir(instpath)
+
+    utils.setup_environment(instpath)
 
     # Maybe this should be smarter too :D
     for pkg in BUILD_ORDER:
@@ -93,18 +89,18 @@ def build_packages(packages, dst, thread_count=BUILD_THREAD_COUNT):
     # TODO: Maybe store only the latest version in packages dict after download
     for pkg in BUILD_ORDER + tuple(extras):
         pkg_file = packages[pkg][-1]
-        path = os.path.join(dst, pkg_file)
+        path = os.path.join(dst_base_path, pkg_file)
         print path
 
         with tarfile.open(path) as tar:
             tar = tarfile.open(path)
-            dst_dir = utils.verify_clean_build_dir(dst, tar)
-            tar.extractall(path=dst, members=utils.safe_tar_files(tar, verbose=True))
+            dst_dir = utils.verify_clean_build_dir(dst_base_path, tar)
+            tar.extractall(path=dst_base_path, members=utils.safe_tar_files(tar, verbose=True))
             tar.close()
 
-        build_package(dst_dir, BUILD_DST_DIR, thread_count=thread_count)
+        build_package(dst_dir, instpath, thread_count=thread_count)
 
-def build_package(src_dir, dst_dir, thread_count=BUILD_THREAD_COUNT):
+def build_package(src_dir, dst_dir, thread_count=1):
     """Build source into destination
     """
 
@@ -120,10 +116,23 @@ def main(args):
     """Tie all the pieces together to build e17
     """
 
-    package_dict = get_package_dict(RELEASES_URL)
+    mirror = args['--mirror']
+    if not mirror.startswith('http'):
+        raise ValueError('Give http url to download from')
 
-    download_packages(SRC_DL_DIR, RELEASES_URL, package_dict)
-    build_packages(package_dict, SRC_DL_DIR, thread_count=BUILD_THREAD_COUNT)
+    src_dir = args['--srcpath']
+    instpath = args['--instpath']
+
+    thread_count = args['--thread-count']
+    try:
+        thread_count = int(thread_count)
+    except ValueError:
+        raise ValueError('Thread count must be integer')
+
+    package_dict = get_package_dict(mirror)
+
+    download_packages(src_dir, mirror, package_dict)
+    build_packages(package_dict, src_dir, instpath, thread_count=thread_count)
 
 # EOF
 
