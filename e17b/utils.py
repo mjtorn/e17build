@@ -1,5 +1,7 @@
 # vim: encoding=utf-8
 
+from distutils import sysconfig
+
 import os
 
 import shutil
@@ -128,10 +130,11 @@ def run(cmd, dir_):
         raise RuntimeError('%s exited %d' % (' '.join(cmd), retval))
 
 def setup_environment(dst_dir):
-    """Sets the build environment.
+    """Sets the build environment. Based on easy_e17.sh
     """
 
     paths = (
+        ('PATH', os.path.join(dst_dir, 'bin')),
         ('LD_LIBRARY_PATH', os.path.join(dst_dir, 'lib')),
         ('PKG_CONFIG_PATH', os.path.join(dst_dir, 'lib', 'pkgconfig')),
     )
@@ -144,6 +147,26 @@ def setup_environment(dst_dir):
         env_vals.insert(0, path)
 
         os.environ[env_var] = ':'.join(env_vals)
+
+    os.environ['PYTHONPATH'] = sysconfig.get_python_lib(prefix=dst_dir)
+    os.environ['PYTHONINCLUDE'] = sysconfig.get_python_inc(prefix=dst_dir)
+
+    # XXX: Not sure if there's a reason the arguments are in different orders
+    # so I won't generalize these. Some copypasta might be good for you.
+    aclocal_path = os.path.join(dst_dir, 'share', 'aclocal')
+    aclocal_flags = os.environ.get('ACLOCAL_FLAGS', '')
+    aclocal_flags = '-I %s %s' % (aclocal_path, aclocal_flags)
+    os.environ['ACLOCAL_FLAGS'] = aclocal_flags.strip()
+
+    cpp_path = os.path.join(dst_dir, 'include')
+    cpp_flags = os.environ.get('CPPFLAGS', '')
+    cpp_flags = '%s -I%s' % (cpp_flags, cpp_path)
+    os.environ['CPPFLAGS'] = cpp_flags.strip()
+
+    ld_path = os.path.join(dst_dir, 'lib')
+    ld_flags = os.environ.get('LDFLAGS', '')
+    ld_flags = '%s -L%s' % (ld_flags, ld_path)
+    os.environ['LDFLAGS'] = ld_flags.strip()
 
 # EOF
 
