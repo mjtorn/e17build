@@ -1,5 +1,7 @@
 # vim: encoding=utf-8
 
+import os
+
 import urllib2
 
 DOWNLOAD_RETRIES = 3
@@ -59,6 +61,16 @@ def download(url, dst_file):
         url.close()
 
     dst.close()
+
+def safe_tar_files(tar, verbose=False):
+    """Although we trust e17 devs, be safe ;)
+    """
+
+    for file_info in tar:
+        if not file_info.name.startswith(os.sep):
+            if verbose:
+                print '[%8d] %s' % (file_info.size, file_info.name)
+            yield file_info
 
 # EOF
 
