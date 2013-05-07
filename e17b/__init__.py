@@ -89,7 +89,7 @@ def build_packages(packages, dst, thread_count=BUILD_THREAD_COUNT):
     print 'Extra packages: %s' % ', '.join(extras)
 
     # TODO: Maybe store only the latest version after download
-    for pkg in BUILD_ORDER:
+    for pkg in BUILD_ORDER + tuple(extras):
         pkg_file = packages[pkg][-1]
         path = os.path.join(dst, pkg_file)
         print path
