@@ -84,7 +84,26 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
 
     # Wouldn't it be nice to build these in parallell?
     extras = available_set.difference(required_set)
+    extras = list(extras)
     print 'Extra packages: %s' % ', '.join(extras)
+
+    # TODO: Maybe model extra package deps somewhere?
+    try:
+        echievements_idx = extras.index('echievements')
+
+        try:
+            etrophy_idx = extras.index('etrophy')
+        except ValueError:
+            etrophy_idx = None
+            print 'etrophy not found'
+    except ValueError:
+        echievements_idx = None
+        print 'echievements not found'
+
+    if echievements_idx is not None and etrophy_idx is not None:
+        if etrophy_idx > echievements_idx:
+            etrophy = extras.pop(etrophy_idx)
+            extras.insert(echievements_idx, etrophy)
 
     # TODO: Maybe store only the latest version in packages dict after download
     for pkg in BUILD_ORDER + tuple(extras):
