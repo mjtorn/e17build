@@ -1,2 +1,4 @@
 pyquery
 docopt
+cython
+gitpython
