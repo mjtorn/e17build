@@ -148,11 +148,15 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
         path = os.path.join(dst_base_path, pkg_file)
         print path
 
-        with tarfile.open(path) as tar:
-            tar = tarfile.open(path)
-            dst_dir = utils.verify_clean_build_dir(dst_base_path, tar)
-            tar.extractall(path=dst_base_path, members=utils.safe_tar_files(tar, verbose=True))
-            tar.close()
+        # Deal different with tarballs and git clones
+        if os.path.isfile(path):
+            with tarfile.open(path) as tar:
+                tar = tarfile.open(path)
+                dst_dir = utils.verify_clean_build_dir(dst_base_path, tar)
+                tar.extractall(path=dst_base_path, members=utils.safe_tar_files(tar, verbose=True))
+                tar.close()
+        else:
+            dst_dir = path
 
         build_package(dst_dir, instpath, thread_count=thread_count)
 
