@@ -120,13 +120,30 @@ def build_package(src_dir, dst_dir, thread_count=1):
     """Build source into destination
     """
 
+    ## XXX: The later additions mostly untested.
+    autogen_cmd = ['./autogen.sh']
     conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
     make_cmd = ['make', '-j%d' % thread_count]
     install_cmd = ['make', 'install']
+    setup_py_cmd = ['python', 'setup.py', '--prefix=%s/python/' % dst_dir]
 
-    utils.run(conf_cmd, src_dir)
-    utils.run(make_cmd, src_dir)
-    utils.run(install_cmd, src_dir)
+    if os.path.exists(os.path.join(src_dir, 'setup.py')):
+        utils.run(setup_py_cmd, src_dir)
+    else:
+        if not os.path.exists(os.path.join(src_dir, 'configure')):
+            if os.path.exists(os.path.join(src_dir, 'autogen.sh')):
+                utils.run(autogen_cmd, src_dir)
+            else:
+                raise RuntimeError('Nothing found to do in %s' % src_dir)
+
+        ## FIXME: This pulseaudio thing should be a cli argument
+        if src_dir.endswith('/efl'):
+            utils.run(conf_cmd + ['--disable-pulseaudio'], src_dir)
+        else:
+            utils.run(conf_cmd, src_dir)
+
+        utils.run(make_cmd, src_dir)
+        utils.run(install_cmd, src_dir)
 
 def main(args):
     """Tie all the pieces together to build e17
