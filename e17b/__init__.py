@@ -6,6 +6,8 @@ from pyquery import PyQuery as pq
 
 from . import utils
 
+import git
+
 import itertools
 
 import os
@@ -21,6 +23,12 @@ BUILD_ORDER = (
 SKIP_BUILD = (
     'evil',
 )
+
+GIT_PATHS = {
+    'econnman': 'git://git.enlightenment.org/apps/econnman.git',
+    'python-efl': 'git://git.enlightenment.org/bindings/python/python-efl.git',
+    'efl': 'git://git.enlightenment.org/core/efl.git',
+}
 
 def get_package_dict(mirror):
     """Which packages are available in mirror?
@@ -44,6 +52,37 @@ def get_package_dict(mirror):
     # print [l.attr('href') for l in links]
 
     return packages
+
+def download_git(dst, git_packages, packages):
+    """Check out git
+    """
+
+    if not os.path.exists(dst):
+        os.mkdir(dst)
+
+    for pkg, to_install in git_packages.items():
+        if not to_install:
+            continue
+
+        dst_path = os.path.join(dst, pkg)
+        if not os.path.exists(dst_path):
+            #os.mkdir(dst_path)
+
+            ## This does not appear to work
+            #repo = git.Repo(GIT_PATHS[pkg])
+            #repo.clone(dst_path)
+            git_repo = GIT_PATHS[pkg]
+            print 'Cloning %s into %s' % (GIT_PATHS[pkg], dst_path)
+
+            git.Git().clone(GIT_PATHS[pkg], dst_path)
+        else:
+            print 'Updating repo at %s' % dst_path
+            repo = git.Repo(dst_path)
+
+            repo.remotes.origin.pull()
+
+        # Look like a list of versions for later
+        packages[pkg] = [dst_path]
 
 def download_packages(dst, mirror, packages, force_download=False):
     """Download from mirror
