@@ -92,9 +92,10 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
     # Wouldn't it be nice to build these in parallell?
     extras = available_set.difference(required_set)
     extras = list(extras)
-    print 'Extra packages: %s' % ', '.join(extras)
 
     utils.dep_order(extras, 'etrophy', 'echievements')
+
+    print 'Extra packages: %s' % ', '.join(extras)
 
     # TODO: Maybe store only the latest version in packages dict after download
     for pkg in BUILD_ORDER + tuple(extras):
