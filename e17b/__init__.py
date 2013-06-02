@@ -196,9 +196,29 @@ def main(args):
     except ValueError:
         raise ValueError('Thread count must be integer')
 
+    # Hit the git
+    efl = args['--efl']
+    python_efl = args['--python-efl']
+    econnman = args['--econnman']
+    if not efl and python_efl:
+        efl = True
+
+    if not python_efl and econnman:
+        python_efl = True
+
+    git_packages = {
+        'econnman': econnman,
+        'python-efl': python_efl,
+        'efl': efl,
+    }
+
     package_dict = get_package_dict(mirror)
 
     download_packages(src_dir, mirror, package_dict)
+
+    if any(git_packages.values()):
+        download_git(src_dir, git_packages, package_dict)
+
     build_packages(package_dict, src_dir, instpath, thread_count=thread_count)
 
     print
