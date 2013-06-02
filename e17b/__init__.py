@@ -189,15 +189,17 @@ def main(args):
     except ValueError:
         raise ValueError('Thread count must be integer')
 
+    ## FIXME: This and all deps must be declared somewhere
     # Hit the git
     efl = args['--efl']
     python_efl = args['--python-efl']
     econnman = args['--econnman']
-    if not efl and python_efl:
-        efl = True
 
     if not python_efl and econnman:
         python_efl = True
+
+    if not efl and python_efl:
+        efl = True
 
     git_packages = {
         'econnman': econnman,
