@@ -18,13 +18,16 @@ __doc__ = """
 E17 builder
 
 Usage:
-  e17build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>]
+  e17build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--efl] [--python-efl] [--econnman]
 
 Options:
   -m <url>, --mirror=<url>      Where to download from [default: http://download.enlightenment.org/releases/]
   -s <path>, --srcpath=<path>   Where to download to [default: %(srcdir)s]
   -i <path>, --instpath=<path>  Where to install to [default: %(instpath)s]
   -t <n>, --thread-count=<n>    How many threads to (try to) use in compiling [default: %(thread_count)d]
+  --efl                         Install efl from git
+  --python-efl                  Install python-efl from git, implies --efl
+  --econnman                    Install econnman from git, implies --python-efl
 
 """ % DEFAULTS
 
