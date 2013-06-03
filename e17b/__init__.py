@@ -91,7 +91,6 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
     extras = list(extras)
     print 'Extra packages: %s' % ', '.join(extras)
 
-    # TODO: Maybe model extra package deps somewhere?
     utils.dep_order(extras, 'etrophy', 'echievements')
     if 'econnman' in extras:
         utils.dep_order(extras, 'python-efl', 'econnman')
