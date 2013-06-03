@@ -109,6 +109,7 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
             continue
 
         pkg_file = packages[pkg][-1]
+        pkg_file = pkg_file.rsplit('/', 1)[-1]
         path = os.path.join(dst_base_path, pkg_file)
         print path
 
