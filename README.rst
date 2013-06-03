@@ -5,8 +5,9 @@ E17 BUILDER
 What?
 =====
 
-A quick hack to build the latest e17 release. Takes the packages off the web, no version
-control support at the moment.
+A quick hack to build the latest e17 release. Takes the released packages off the web.
+
+Git support is very limited, only for econnman, but maybe I'll expand from there.
 
 Comes with no warranties, it's just something I made for myself so it works for me.
 
@@ -50,7 +51,7 @@ Help?
 By all means! Pull requests and such are more than welcome.
 
 Oh you meant this help::
-  
+
   (e17build)mjt@ishtar:~/src/git_checkouts/e17build$ bin/e17build.py  --help
   E17 builder
 
@@ -62,6 +63,9 @@ Oh you meant this help::
     -s <path>, --srcpath=<path>   Where to download to [default: /home/mjt/src/e17]
     -i <path>, --instpath=<path>  Where to install to [default: /home/mjt/e17]
     -t <n>, --thread-count=<n>    How many threads to (try to) use in compiling [default: 9]
+  --efl                         Install efl from git
+  --python-efl                  Install python-efl from git, implies --efl
+  --econnman                    Install econnman from git, implies --python-efl
 
 Note the defaults are dynamically generated and may differ for you.
 
@@ -69,8 +73,8 @@ And for your .xinitrc::
 
   export PATH=$HOME/e17/bin:$PATH
   export LD_LIBRARY_PATH=$HOME/e17/lib:$LD_LIBRARY_PATH
-  export PYTHONPATH=$HOME/e17/lib/python2.6/site-packages:$PYTHONPATH
-  
+  export PYTHONPATH=$HOME/e17/lib/python2.7/site-packages:$PYTHONPATH
+
   exec $HOME/e17/bin/enlightenment_start
 
 
