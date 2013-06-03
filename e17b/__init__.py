@@ -136,12 +136,7 @@ def build_package(src_dir, dst_dir, thread_count=1):
             else:
                 raise RuntimeError('Nothing found to do in %s' % src_dir)
 
-        ## FIXME: This pulseaudio thing should be a cli argument
-        if src_dir.endswith('/efl'):
-            utils.run(conf_cmd + ['--disable-pulseaudio'], src_dir)
-        else:
-            utils.run(conf_cmd, src_dir)
-
+        utils.run(conf_cmd, src_dir)
         utils.run(make_cmd, src_dir)
         utils.run(install_cmd, src_dir)
 
