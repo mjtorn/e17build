@@ -98,6 +98,7 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
     extras = list(extras)
 
     utils.dep_order(extras, 'etrophy', 'echievements')
+    utils.dep_order(extras, 'etrophy', 'elemines')
 
     print 'Extra packages: %s' % ', '.join(extras)
 
