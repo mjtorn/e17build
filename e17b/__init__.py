@@ -16,6 +16,9 @@ BUILD_ORDER = (
     'eina', 'eet', 'evas', 'evas_generic_loaders', 'ecore', 'eio', 'embryo',
     'edje', 'efreet', 'e_dbus', 'eeze', 'emotion', 'ethumb', 'elementary',
     'enlightenment',
+    # The order of these probably doesn't matter
+    'python-evas', 'python-ecore', 'python-edje', 'python-e_dbus', 'python-emotion',
+    'python-ethumb', 'python-elementary',
 )
 
 SKIP_BUILD = (
@@ -142,6 +145,11 @@ def main(args):
         raise ValueError('Thread count must be integer')
 
     package_dict = get_package_dict(mirror)
+
+    if args['--python']:
+        python_mirror = '%s/BINDINGS/python/' % args['--mirror']
+
+        package_dict.update(get_package_dict(python_mirror))
 
     download_packages(src_dir, mirror, package_dict)
     build_packages(package_dict, src_dir, instpath, thread_count=thread_count)
