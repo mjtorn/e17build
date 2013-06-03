@@ -27,7 +27,7 @@ def name_from_link(link):
 
     url = link.attr('href')
 
-    return url.split('-', 1)[0]
+    return url.rsplit('-', 1)[0]
 
 def pkg_name_sort(link1, link2):
     """Sort links by package name
