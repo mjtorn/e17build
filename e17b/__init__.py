@@ -25,8 +25,9 @@ SKIP_BUILD = (
     'evil',
 )
 
-def get_package_dict(mirror):
+def get_package_dict(mirror, prepend=None):
     """Which packages are available in mirror?
+    ``prepend`` eg. 'BINDINGS/python' (without slashes)
     """
 
     print 'Getting from URL %s' % mirror
@@ -43,6 +44,8 @@ def get_package_dict(mirror):
 
     for pkg, list_ in g:
         packages[pkg] = [l.attr('href') for l in list_]
+        if prepend is not None:
+            packages[pkg] = ['/%s/%s' % (prepend, l) for l in packages[pkg]]
 
     # print [l.attr('href') for l in links]
 
@@ -63,6 +66,7 @@ def download_packages(dst, mirror, packages, force_download=False):
         url = '%s%s' % (mirror, latest_pkg)
         print 'Downloading %s' % url
 
+        latest_pkg = latest_pkg.rsplit('/', 1)[-1]
         dst_file = os.path.join(dst, latest_pkg)
         if not force_download and os.path.exists(dst_file):
             print 'File exists: %s' % dst_file
@@ -162,7 +166,7 @@ def main(args):
     if args['--python']:
         python_mirror = '%s/BINDINGS/python/' % args['--mirror']
 
-        package_dict.update(get_package_dict(python_mirror))
+        package_dict.update(get_package_dict(python_mirror, prepend='BINDINGS/python'))
 
     download_packages(src_dir, mirror, package_dict)
     build_packages(package_dict, src_dir, instpath, thread_count=thread_count)
