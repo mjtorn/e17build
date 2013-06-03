@@ -92,10 +92,6 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
     print 'Extra packages: %s' % ', '.join(extras)
 
     utils.dep_order(extras, 'etrophy', 'echievements')
-    if 'econnman' in extras:
-        utils.dep_order(extras, 'python-efl', 'econnman')
-    if 'python-efl' in extras:
-        utils.dep_order(extras, 'efl', 'python-efl')
 
     # TODO: Maybe store only the latest version in packages dict after download
     for pkg in BUILD_ORDER + tuple(extras):
