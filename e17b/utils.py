@@ -27,7 +27,11 @@ def name_from_link(link):
 
     url = link.attr('href')
 
-    return url.rsplit('-', 1)[0]
+    # FIXME: This is painful, but eg .rsplit('-', 1)[0] fails with 1.7.0-beta and
+    # we need to support eg. python-emotion
+    if 'python' in url:
+        return '-'.join(url.split('-', 2)[:2])
+    return url.split('-', 1)[0]
 
 def pkg_name_sort(link1, link2):
     """Sort links by package name
