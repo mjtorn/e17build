@@ -27,6 +27,10 @@ def name_from_link(link):
 
     url = link.attr('href')
 
+    # FIXME: This is painful, but eg .rsplit('-', 1)[0] fails with 1.7.0-beta and
+    # we need to support eg. python-emotion
+    if 'python' in url:
+        return '-'.join(url.split('-', 2)[:2])
     return url.split('-', 1)[0]
 
 def pkg_name_sort(link1, link2):
@@ -37,6 +41,27 @@ def pkg_name_sort(link1, link2):
     pkg_name2 = name_from_link(link2)
 
     return cmp(pkg_name1, pkg_name2)
+
+def dep_order(pkgs, pkg1, pkg2):
+    """Look for pkg1 and pkg2 in pkgs and make sure they're in that order
+    """
+
+    try:
+        pkg1_idx = pkgs.index(pkg1)
+
+        try:
+            pkg2_idx = pkgs.index(pkg2)
+        except ValueError:
+            pkg2_idx = None
+            print '%s not found' % pkg2
+    except ValueError:
+        pkg1_idx = None
+        print '%s not found' % pkg1
+
+    if pkg1_idx is not None and pkg2_idx is not None:
+        if pkg1_idx > pkg2_idx:
+            pkg1_ = pkgs.pop(pkg1_idx)
+            pkgs.insert(pkg2_idx, pkg1_)
 
 def download(url, dst_file):
     """Download url into local file

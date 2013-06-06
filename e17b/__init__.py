@@ -16,14 +16,18 @@ BUILD_ORDER = (
     'eina', 'eet', 'evas', 'evas_generic_loaders', 'ecore', 'eio', 'embryo',
     'edje', 'efreet', 'e_dbus', 'eeze', 'emotion', 'ethumb', 'elementary',
     'enlightenment',
+    # The order of these probably doesn't matter
+    'python-evas', 'python-ecore', 'python-edje', 'python-e_dbus', 'python-emotion',
+    'python-ethumb', 'python-elementary',
 )
 
 SKIP_BUILD = (
     'evil',
 )
 
-def get_package_dict(mirror):
+def get_package_dict(mirror, prepend=None):
     """Which packages are available in mirror?
+    ``prepend`` eg. 'BINDINGS/python' (without slashes)
     """
 
     print 'Getting from URL %s' % mirror
@@ -40,6 +44,8 @@ def get_package_dict(mirror):
 
     for pkg, list_ in g:
         packages[pkg] = [l.attr('href') for l in list_]
+        if prepend is not None:
+            packages[pkg] = ['/%s/%s' % (prepend, l) for l in packages[pkg]]
 
     # print [l.attr('href') for l in links]
 
@@ -60,6 +66,7 @@ def download_packages(dst, mirror, packages, force_download=False):
         url = '%s%s' % (mirror, latest_pkg)
         print 'Downloading %s' % url
 
+        latest_pkg = latest_pkg.rsplit('/', 1)[-1]
         dst_file = os.path.join(dst, latest_pkg)
         if not force_download and os.path.exists(dst_file):
             print 'File exists: %s' % dst_file
@@ -89,25 +96,11 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
     # Wouldn't it be nice to build these in parallell?
     extras = available_set.difference(required_set)
     extras = list(extras)
+
+    utils.dep_order(extras, 'etrophy', 'echievements')
+    utils.dep_order(extras, 'etrophy', 'elemines')
+
     print 'Extra packages: %s' % ', '.join(extras)
-
-    # TODO: Maybe model extra package deps somewhere?
-    try:
-        echievements_idx = extras.index('echievements')
-
-        try:
-            etrophy_idx = extras.index('etrophy')
-        except ValueError:
-            etrophy_idx = None
-            print 'etrophy not found'
-    except ValueError:
-        echievements_idx = None
-        print 'echievements not found'
-
-    if echievements_idx is not None and etrophy_idx is not None:
-        if etrophy_idx > echievements_idx:
-            etrophy = extras.pop(etrophy_idx)
-            extras.insert(echievements_idx, etrophy)
 
     # TODO: Maybe store only the latest version in packages dict after download
     for pkg in BUILD_ORDER + tuple(extras):
@@ -117,6 +110,7 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
             continue
 
         pkg_file = packages[pkg][-1]
+        pkg_file = pkg_file.rsplit('/', 1)[-1]
         path = os.path.join(dst_base_path, pkg_file)
         print path
 
@@ -132,13 +126,25 @@ def build_package(src_dir, dst_dir, thread_count=1):
     """Build source into destination
     """
 
+    ## XXX: The later additions mostly untested.
+    autogen_cmd = ['./autogen.sh']
     conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
     make_cmd = ['make', '-j%d' % thread_count]
     install_cmd = ['make', 'install']
+    setup_py_cmd = ['python', 'setup.py', '--prefix=%s/python/' % dst_dir]
 
-    utils.run(conf_cmd, src_dir)
-    utils.run(make_cmd, src_dir)
-    utils.run(install_cmd, src_dir)
+    if os.path.exists(os.path.join(src_dir, 'setup.py')):
+        utils.run(setup_py_cmd, src_dir)
+    else:
+        if not os.path.exists(os.path.join(src_dir, 'configure')):
+            if os.path.exists(os.path.join(src_dir, 'autogen.sh')):
+                utils.run(autogen_cmd, src_dir)
+            else:
+                raise RuntimeError('Nothing found to do in %s' % src_dir)
+
+        utils.run(conf_cmd, src_dir)
+        utils.run(make_cmd, src_dir)
+        utils.run(install_cmd, src_dir)
 
 def main(args):
     """Tie all the pieces together to build e17
@@ -158,6 +164,11 @@ def main(args):
         raise ValueError('Thread count must be integer')
 
     package_dict = get_package_dict(mirror)
+
+    if args['--python']:
+        python_mirror = '%s/BINDINGS/python/' % args['--mirror']
+
+        package_dict.update(get_package_dict(python_mirror, prepend='BINDINGS/python'))
 
     download_packages(src_dir, mirror, package_dict)
     build_packages(package_dict, src_dir, instpath, thread_count=thread_count)
