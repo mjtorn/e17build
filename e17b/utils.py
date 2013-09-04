@@ -142,6 +142,10 @@ def remove_if_exists(dir_):
 
     if os.path.exists(dir_):
         print 'Delete %s' % dir_
+        if os.path.islink(dir_):
+            link_dir = dir_
+            dir_ = os.path.realpath(dir_)
+            os.remove(link_dir)
         shutil.rmtree(dir_)
 
 def run(cmd, dir_):
