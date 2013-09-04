@@ -80,7 +80,9 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1):
     print 'Attempt to build with thread count %d' % thread_count
 
     utils.remove_if_exists(instpath)
-    os.mkdir(instpath)
+    # Hack around a potential symlink situation
+    if not os.path.exists(instpath):
+        os.mkdir(instpath)
 
     utils.setup_environment(instpath)
 
