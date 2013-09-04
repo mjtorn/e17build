@@ -142,11 +142,13 @@ def remove_if_exists(dir_):
 
     if os.path.exists(dir_):
         print 'Delete %s' % dir_
+        # In case of symlink, make sure it remains intact
         if os.path.islink(dir_):
-            link_dir = dir_
-            dir_ = os.path.realpath(dir_)
-            os.remove(link_dir)
-        shutil.rmtree(dir_)
+            real_path = os.path.realpath(dir_)
+            shutil.rmtree(real_path)
+            os.mkdir(real_path)
+        else:
+            shutil.rmtree(dir_)
 
 def run(cmd, dir_):
     """Try running a command in a directory, raise exception on failure
