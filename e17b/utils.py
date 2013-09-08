@@ -112,7 +112,7 @@ def safe_tar_files(tar, verbose=False):
 
         yield file_info
 
-def verify_clean_build_dir(dst, tar):
+def verify_build_dir(dst, tar, clean=True):
     """Where does this tar extract? Remove old, if exists
     Returns the name of the dir
     """
@@ -132,7 +132,8 @@ def verify_clean_build_dir(dst, tar):
         raise ValueError('We need a directory to work with %s' % tar.name)
 
     dst_dir = os.path.join(dst, found_main_dir)
-    remove_if_exists(dst_dir)
+    if clean:
+        remove_if_exists(dst_dir)
 
     return dst_dir
 
