@@ -167,7 +167,7 @@ def main(args):
 
     package_dict = get_package_dict(mirror)
 
-    if args['--python']:
+    if not args['--no-python']:
         python_mirror = '%s/BINDINGS/python/' % args['--mirror']
 
         package_dict.update(get_package_dict(python_mirror, prepend='BINDINGS/python'))

@@ -18,14 +18,14 @@ __doc__ = """
 E17 builder
 
 Usage:
-  e17build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--python]
+  e17build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--no-python]
 
 Options:
   -m <url>, --mirror=<url>      Where to download from [default: http://download.enlightenment.org/releases/]
   -s <path>, --srcpath=<path>   Where to download to [default: %(srcdir)s]
   -i <path>, --instpath=<path>  Where to install to [default: %(instpath)s]
   -t <n>, --thread-count=<n>    How many threads to (try to) use in compiling [default: %(thread_count)d]
-  -p, --python                  Download Python bindings for efl
+  --no-python                   Do not download Python bindings for efl
 
 """ % DEFAULTS
 
