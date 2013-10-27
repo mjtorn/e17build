@@ -73,7 +73,7 @@ def download_packages(dst, mirror, packages, force_download=False):
         else:
             utils.download(url, dst_file)
 
-def build_packages(packages, dst_base_path, instpath, thread_count=1, clean=True):
+def build_packages(packages, dst_base_path, instpath, thread_count=1, clean=True, rebuild=False):
     """Builder. Contains extraction too.
     """
 
@@ -119,12 +119,13 @@ def build_packages(packages, dst_base_path, instpath, thread_count=1, clean=True
         with tarfile.open(path) as tar:
             tar = tarfile.open(path)
             dst_dir = utils.verify_build_dir(dst_base_path, tar, clean=clean)
-            tar.extractall(path=dst_base_path, members=utils.safe_tar_files(tar, verbose=True))
+            if not rebuild:
+                tar.extractall(path=dst_base_path, members=utils.safe_tar_files(tar, verbose=True))
             tar.close()
 
-        build_package(dst_dir, instpath, thread_count=thread_count)
+        build_package(dst_dir, instpath, thread_count=thread_count, rebuild=rebuild)
 
-def build_package(src_dir, dst_dir, thread_count=1):
+def build_package(src_dir, dst_dir, thread_count=1, rebuild=False):
     """Build source into destination
     """
 
@@ -173,9 +174,15 @@ def main(args):
         package_dict.update(get_package_dict(python_mirror, prepend='BINDINGS/python'))
 
     clean = not args['--no-clean']
+    rebuild = args['--rebuild']
 
+    if rebuild:
+        clean = False
+
+    # TODO: Do not assume new packages have been released
+    # ie. populate package_dict with what's downloaded if rebuild is True
     download_packages(src_dir, mirror, package_dict)
-    build_packages(package_dict, src_dir, instpath, thread_count=thread_count, clean=clean)
+    build_packages(package_dict, src_dir, instpath, thread_count=thread_count, clean=clean, rebuild=rebuild)
 
     print
     print 'DONE!'
