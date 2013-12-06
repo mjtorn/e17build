@@ -16,7 +16,7 @@ DOWNLOAD_RETRIES = 3
 DOWNLOAD_TIMEOUT = 10
 
 IGNORE = (
-    'enlightenment-0.18.0', 'efl',
+    'enlightenment-0.18.0', 'efl', '1.8.0',
 )
 
 def is_ignored(link):
