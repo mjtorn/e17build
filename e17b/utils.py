@@ -15,6 +15,20 @@ import urllib2
 DOWNLOAD_RETRIES = 3
 DOWNLOAD_TIMEOUT = 10
 
+IGNORE = (
+    'enlightenment-0.18.0', 'efl',
+)
+
+def is_ignored(link):
+    """Skip some e18 stuff for now
+    """
+
+    for part in IGNORE:
+        if part in link:
+            return True
+
+    return False
+
 def is_interesting(link):
     """Look at link and see if we want take note of it
     """
