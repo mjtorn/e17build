@@ -37,7 +37,7 @@ def get_package_dict(mirror, prepend=None):
     url = pq(mirror)
 
     links = url('a')
-    links = [pq(l) for l in links if utils.is_interesting(l)]
+    links = [pq(l) for l in links if utils.is_interesting(l) and not utils.is_ignored(l)]
     links.sort(cmp=utils.pkg_name_sort)
 
     g = itertools.groupby(links, utils.name_from_link)
