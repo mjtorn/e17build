@@ -24,7 +24,7 @@ def is_ignored(link):
     """
 
     for part in IGNORE:
-        if part in link:
+        if part in link.attrib['href']:
             return True
 
     return False
