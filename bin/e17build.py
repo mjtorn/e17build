@@ -25,7 +25,6 @@ Options:
   -s <path>, --srcpath=<path>   Where to download to [default: %(srcdir)s]
   -i <path>, --instpath=<path>  Where to install to [default: %(instpath)s]
   -t <n>, --thread-count=<n>    How many threads to (try to) use in compiling [default: %(thread_count)d]
-  --no-python                   Do not download Python bindings for efl
   --no-clean                    Do not clean up old files
   --rebuild                     Rebuild sources, implies --no-clean
 
