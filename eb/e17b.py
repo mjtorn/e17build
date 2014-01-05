@@ -111,10 +111,6 @@ class E17Builder(EnlightenmentBuilder):
 
         utils.setup_environment(instpath)
 
-        # Maybe this should be smarter too :D
-        for pkg in self.build_order:
-            assert packages.has_key(pkg), '%s missing' % pkg
-
         print 'Packages: %s' % ', '.join(self.build_order)
 
         # TODO: Maybe store only the latest version in packages dict after download
