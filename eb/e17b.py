@@ -44,10 +44,12 @@ class E17Builder(EnlightenmentBuilder):
 
         packages = {}
 
-        for path in self.build_order:
+        for pkg_path in self.build_order:
             # XXX: Maybe some day these will be moved to rel
-            if not '/' in path:
-                url = '%s%s' % (mirror, '/releases/')
+            if not '/' in pkg_path:
+                path = '/releases/'
+
+                url = '%s%s' % (mirror, path)
                 url = pq(url)
 
                 links = url('a')
@@ -56,6 +58,8 @@ class E17Builder(EnlightenmentBuilder):
                 links = map(pq, links)
                 links.sort(cmp=utils.pkg_name_sort)
             else:
+                path = pkg_path
+
                 url = '%s%s' % (mirror, path)
                 url = pq(url)
 
