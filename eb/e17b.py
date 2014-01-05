@@ -4,6 +4,8 @@ from cStringIO import StringIO
 
 from pyquery import PyQuery as pq
 
+from .base import EnlightenmentBuilder
+
 from . import utils
 
 import itertools
@@ -25,170 +27,158 @@ SKIP_BUILD = (
     'evil',
 )
 
-def get_package_dict(mirror, prepend=None):
-    """Which packages are available in mirror?
-    ``prepend`` eg. 'BINDINGS/python' (without slashes)
+class E17Builder(EnlightenmentBuilder):
+    """Build e17
     """
 
-    print 'Getting from URL %s' % mirror
+    def __init__(self, args, build_order=BUILD_ORDER, skip_build=SKIP_BUILD):
+        """Set kwargs from this file
+        """
 
-    packages = {}
+        self.args = args
+        self.build_order = BUILD_ORDER
+        self.skip_build = SKIP_BUILD
 
-    url = pq(mirror)
+    def get_package_dict(self, mirror, prepend=None):
+        """Which packages are available in mirror?
+        ``prepend`` eg. 'BINDINGS/python' (without slashes)
+        """
 
-    links = url('a')
-    links = [pq(l) for l in links if utils.is_interesting(l) and not utils.is_ignored(l)]
-    links.sort(cmp=utils.pkg_name_sort)
+        print 'Getting from URL %s' % mirror
 
-    g = itertools.groupby(links, utils.name_from_link)
+        packages = {}
 
-    for pkg, list_ in g:
-        packages[pkg] = [l.attr('href') for l in list_]
-        if prepend is not None:
-            packages[pkg] = ['/%s/%s' % (prepend, l) for l in packages[pkg]]
+        url = pq(mirror)
 
-    # print [l.attr('href') for l in links]
+        links = url('a')
+        links = [pq(l) for l in links if utils.is_interesting(l) and not utils.is_ignored(l)]
+        links.sort(cmp=utils.pkg_name_sort)
 
-    return packages
+        g = itertools.groupby(links, utils.name_from_link)
 
-def download_packages(dst, mirror, packages, force_download=False):
-    """Download from mirror
-    Optionally force to download even if local file exists
-    """
+        for pkg, list_ in g:
+            packages[pkg] = [l.attr('href') for l in list_]
+            if prepend is not None:
+                packages[pkg] = ['/%s/%s' % (prepend, l) for l in packages[pkg]]
 
-    # This could be smarter
-    if not os.path.exists(dst):
-        os.mkdir(dst)
+        # print [l.attr('href') for l in links]
 
-    # Want to start building after download with multiprocessing...
-    for pkg, pkg_versions in packages.items():
-        latest_pkg = pkg_versions[-1]
-        url = '%s%s' % (mirror, latest_pkg)
-        print 'Downloading %s' % url
+        return packages
 
-        latest_pkg = latest_pkg.rsplit('/', 1)[-1]
-        dst_file = os.path.join(dst, latest_pkg)
-        if not force_download and os.path.exists(dst_file):
-            print 'File exists: %s' % dst_file
-        else:
-            utils.download(url, dst_file)
+    def download_packages(self, dst, mirror, packages, force_download=False):
+        """Download from mirror
+        Optionally force to download even if local file exists
+        """
 
-def build_packages(packages, dst_base_path, instpath, thread_count=1, clean=True, rebuild=False):
-    """Builder. Contains extraction too.
-    """
+        # This could be smarter
+        if not os.path.exists(dst):
+            os.mkdir(dst)
 
-    print 'Attempt to build with thread count %d' % thread_count
+        # Want to start building after download with multiprocessing...
+        for pkg, pkg_versions in packages.items():
+            latest_pkg = pkg_versions[-1]
+            url = '%s%s' % (mirror, latest_pkg)
+            print 'Downloading %s' % url
 
-    utils.remove_if_exists(instpath)
-    # Hack around a potential symlink situation
-    if not os.path.exists(instpath):
-        os.mkdir(instpath)
-
-    utils.setup_environment(instpath)
-
-    # Maybe this should be smarter too :D
-    for pkg in BUILD_ORDER:
-        assert packages.has_key(pkg), '%s missing' % pkg
-
-    print 'Packages: %s' % ', '.join(BUILD_ORDER)
-
-    required_set = set(BUILD_ORDER)
-    available_set = set(packages.keys())
-
-    # Wouldn't it be nice to build these in parallell?
-    extras = available_set.difference(required_set)
-    extras = list(extras)
-
-    utils.dep_order(extras, 'etrophy', 'echievements')
-    utils.dep_order(extras, 'etrophy', 'elemines')
-
-    print 'Extra packages: %s' % ', '.join(extras)
-
-    # TODO: Maybe store only the latest version in packages dict after download
-    for pkg in BUILD_ORDER + tuple(extras):
-        # TODO: This also needs to be saner, but now I got to get this crap finished
-        if pkg in SKIP_BUILD:
-            print 'Skipping %s' % pkg
-            continue
-
-        pkg_file = packages[pkg][-1]
-        pkg_file = pkg_file.rsplit('/', 1)[-1]
-        path = os.path.join(dst_base_path, pkg_file)
-        print path
-
-        with tarfile.open(path) as tar:
-            tar = tarfile.open(path)
-            dst_dir = utils.verify_build_dir(dst_base_path, tar, clean=clean)
-            if not rebuild:
-                tar.extractall(path=dst_base_path, members=utils.safe_tar_files(tar, verbose=True))
-            tar.close()
-
-        build_package(dst_dir, instpath, thread_count=thread_count, rebuild=rebuild)
-
-def build_package(src_dir, dst_dir, thread_count=1, rebuild=False):
-    """Build source into destination
-    """
-
-    ## XXX: The later additions mostly untested.
-    autogen_cmd = ['./autogen.sh']
-    conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
-    make_cmd = ['make', '-j%d' % thread_count]
-    install_cmd = ['make', 'install']
-    setup_py_cmd = ['python', 'setup.py', '--prefix=%s/python/' % dst_dir]
-
-    if os.path.exists(os.path.join(src_dir, 'setup.py')):
-        utils.run(setup_py_cmd, src_dir)
-    else:
-        if not os.path.exists(os.path.join(src_dir, 'configure')):
-            if os.path.exists(os.path.join(src_dir, 'autogen.sh')):
-                utils.run(autogen_cmd, src_dir)
+            latest_pkg = latest_pkg.rsplit('/', 1)[-1]
+            dst_file = os.path.join(dst, latest_pkg)
+            if not force_download and os.path.exists(dst_file):
+                print 'File exists: %s' % dst_file
             else:
-                raise RuntimeError('Nothing found to do in %s' % src_dir)
+                utils.download(url, dst_file)
 
-        utils.run(conf_cmd, src_dir)
-        utils.run(make_cmd, src_dir)
-        utils.run(install_cmd, src_dir)
+    def build_packages(self, packages, dst_base_path, instpath, thread_count=1, clean=True, rebuild=False):
+        """Builder. Contains extraction too.
+        """
 
-def main(args):
-    """Tie all the pieces together to build e17
-    """
+        print 'Attempt to build with thread count %d' % thread_count
 
-    mirror = args['--mirror']
-    if not mirror.startswith('http'):
-        raise ValueError('Give http url to download from')
+        utils.remove_if_exists(instpath)
+        # Hack around a potential symlink situation
+        if not os.path.exists(instpath):
+            os.mkdir(instpath)
 
-    src_dir = args['--srcpath']
-    instpath = args['--instpath']
+        utils.setup_environment(instpath)
 
-    thread_count = args['--thread-count']
-    try:
-        thread_count = int(thread_count)
-    except ValueError:
-        raise ValueError('Thread count must be integer')
+        # Maybe this should be smarter too :D
+        for pkg in self.build_order:
+            assert packages.has_key(pkg), '%s missing' % pkg
 
-    package_dict = get_package_dict(mirror)
+        print 'Packages: %s' % ', '.join(self.build_order)
 
-    if not args['--no-python']:
-        python_mirror = '%s/BINDINGS/python/' % args['--mirror']
+        required_set = set(self.build_order)
+        available_set = set(packages.keys())
 
-        package_dict.update(get_package_dict(python_mirror, prepend='BINDINGS/python'))
+        # Wouldn't it be nice to build these in parallell?
+        extras = available_set.difference(required_set)
+        extras = list(extras)
 
-    clean = not args['--no-clean']
-    rebuild = args['--rebuild']
+        utils.dep_order(extras, 'etrophy', 'echievements')
+        utils.dep_order(extras, 'etrophy', 'elemines')
 
-    if rebuild:
-        clean = False
+        print 'Extra packages: %s' % ', '.join(extras)
 
-    # TODO: Do not assume new packages have been released
-    # ie. populate package_dict with what's downloaded if rebuild is True
-    download_packages(src_dir, mirror, package_dict)
-    build_packages(package_dict, src_dir, instpath, thread_count=thread_count, clean=clean, rebuild=rebuild)
+        # TODO: Maybe store only the latest version in packages dict after download
+        for pkg in self.build_order + tuple(extras):
+            # TODO: This also needs to be saner, but now I got to get this crap finished
+            if pkg in self.skip_build:
+                print 'Skipping %s' % pkg
+                continue
 
-    print
-    print 'DONE!'
+            pkg_file = packages[pkg][-1]
+            pkg_file = pkg_file.rsplit('/', 1)[-1]
+            path = os.path.join(dst_base_path, pkg_file)
+            print path
 
-    print
-    print '(Remember to chown root and chmod u+s,a+x the freqset executable)'
+            with tarfile.open(path) as tar:
+                tar = tarfile.open(path)
+                dst_dir = utils.verify_build_dir(dst_base_path, tar, clean=clean)
+                if not rebuild:
+                    tar.extractall(path=dst_base_path, members=utils.safe_tar_files(tar, verbose=True))
+                tar.close()
+
+            self.build_package(dst_dir, instpath, thread_count=thread_count, rebuild=rebuild)
+
+    def main(self, args):
+        """Tie all the pieces together to build e17
+        """
+
+        mirror = args['--mirror']
+        if not mirror.startswith('http'):
+            raise ValueError('Give http url to download from')
+
+        src_dir = args['--srcpath']
+        instpath = args['--instpath']
+
+        thread_count = args['--thread-count']
+        try:
+            thread_count = int(thread_count)
+        except ValueError:
+            raise ValueError('Thread count must be integer')
+
+        package_dict = self.get_package_dict(mirror)
+
+        if not args['--no-python']:
+            python_mirror = '%s/BINDINGS/python/' % args['--mirror']
+
+            package_dict.update(self.get_package_dict(python_mirror, prepend='BINDINGS/python'))
+
+        clean = not args['--no-clean']
+        rebuild = args['--rebuild']
+
+        if rebuild:
+            clean = False
+
+        # TODO: Do not assume new packages have been released
+        # ie. populate package_dict with what's downloaded if rebuild is True
+        self.download_packages(src_dir, mirror, package_dict)
+        self.build_packages(package_dict, src_dir, instpath, thread_count=thread_count, clean=clean, rebuild=rebuild)
+
+        print
+        print 'DONE!'
+
+        print
+        print '(Remember to chown root and chmod u+s,a+x the freqset executable)'
 
 # EOF
 
