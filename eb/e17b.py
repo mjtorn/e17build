@@ -28,13 +28,13 @@ class E17Builder(EnlightenmentBuilder):
     """Build e17
     """
 
-    def __init__(self, args, build_order=BUILD_ORDER, skip_build=SKIP_BUILD):
+    def __init__(self, args, build_order=BUILD_ORDER):
         """Set kwargs from this file
         """
 
         self.args = args
         self.build_order = BUILD_ORDER
-        self.skip_build = SKIP_BUILD
+        self.skip_build = None
 
     def get_package_dict(self, mirror, prepend=None):
         """Which packages are available in mirror?
