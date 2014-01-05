@@ -14,17 +14,14 @@ import os
 
 import tarfile
 
+# These directories reflect the names of the packages
 BUILD_ORDER = (
-    'eina', 'eet', 'evas', 'evas_generic_loaders', 'ecore', 'eio', 'embryo',
-    'edje', 'efreet', 'e_dbus', 'eeze', 'emotion', 'ethumb', 'elementary',
-    'enlightenment',
-    # The order of these probably doesn't matter
-    'python-evas', 'python-ecore', 'python-edje', 'python-e_dbus', 'python-emotion',
-    'python-ethumb', 'python-elementary',
-)
-
-SKIP_BUILD = (
-    'evil',
+    # libs
+    'rel/libs/efl', 'rel/libs/evas_generic_loaders', 'rel/libs/emotion_generic_players', 'rel/libs/elementary',
+    # apps
+    'enlightenment', 'rel/apps/econnman', 'rel/apps/enventor', 'rel/apps/terminology',
+    # bindings
+    'rel/bindings/python-efl',
 )
 
 class E17Builder(EnlightenmentBuilder):
