@@ -165,11 +165,6 @@ class E17Builder(EnlightenmentBuilder):
 
         package_dict = self.get_package_dict(mirror)
 
-        if not args['--no-python']:
-            python_mirror = '%s/rel/bindings/python/' % args['--mirror']
-
-            package_dict.update(self.get_package_dict(python_mirror))
-
         clean = not args['--no-clean']
         rebuild = args['--rebuild']
 
