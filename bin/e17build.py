@@ -35,7 +35,8 @@ from docopt import docopt
 
 if __name__ == '__main__':
     args = docopt(__doc__)
-    sys.exit(e17b.main(args))
+    builder = e17b.E17Builder(args)
+    sys.exit(builder.main(args))
 
 # EOF
 
