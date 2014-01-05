@@ -4,7 +4,7 @@ from cStringIO import StringIO
 
 from pyquery import PyQuery as pq
 
-from .. import utils
+from . import utils
 
 import itertools
 
