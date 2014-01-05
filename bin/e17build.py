@@ -5,7 +5,7 @@ import os
 
 import sys
 
-import e17b
+from eb import e17b
 
 DEFAULTS = {
     'srcdir': os.path.join(os.path.expanduser('~'), 'src', 'e17'),
