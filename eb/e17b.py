@@ -70,7 +70,7 @@ class E17Builder(EnlightenmentBuilder):
             g = itertools.groupby(links, utils.name_from_link)
 
             for pkg, list_ in g:
-                packages[pkg] = [l.attr('href') for l in list_]
+                packages[pkg] = (path, [l.attr('href') for l in list_])
 
             # print [l.attr('href') for l in links]
 
@@ -86,9 +86,9 @@ class E17Builder(EnlightenmentBuilder):
             os.mkdir(dst)
 
         # Want to start building after download with multiprocessing...
-        for pkg, pkg_versions in packages.items():
+        for pkg, (path, pkg_versions) in packages.items():
             latest_pkg = pkg_versions[-1]
-            url = '%s%s' % (mirror, latest_pkg)
+            url = '%s%s/%s' % (mirror, path, latest_pkg)
             print 'Downloading %s' % url
 
             latest_pkg = latest_pkg.rsplit('/', 1)[-1]
