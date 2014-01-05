@@ -21,7 +21,7 @@ BUILD_ORDER = (
     # apps
     'enlightenment', 'rel/apps/econnman', 'rel/apps/enventor', 'rel/apps/terminology',
     # bindings
-    'rel/bindings/python-efl',
+    'rel/bindings/python',
 )
 
 class E17Builder(EnlightenmentBuilder):
