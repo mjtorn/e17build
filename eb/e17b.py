@@ -35,7 +35,6 @@ class E17Builder(EnlightenmentBuilder):
 
         self.args = args
         self.build_order = BUILD_ORDER
-        self.skip_build = None
 
     def get_package_dict(self, mirror):
         """Which packages are available in mirror?
@@ -114,25 +113,8 @@ class E17Builder(EnlightenmentBuilder):
 
         print 'Packages: %s' % ', '.join(self.build_order)
 
-        required_set = set(self.build_order)
-        available_set = set(packages.keys())
-
-        # Wouldn't it be nice to build these in parallell?
-        extras = available_set.difference(required_set)
-        extras = list(extras)
-
-        utils.dep_order(extras, 'etrophy', 'echievements')
-        utils.dep_order(extras, 'etrophy', 'elemines')
-
-        print 'Extra packages: %s' % ', '.join(extras)
-
         # TODO: Maybe store only the latest version in packages dict after download
-        for pkg in self.build_order + tuple(extras):
-            # TODO: This also needs to be saner, but now I got to get this crap finished
-            if pkg in self.skip_build:
-                print 'Skipping %s' % pkg
-                continue
-
+        for pkg in self.build_order:
             pkg_file = packages[pkg][-1]
             pkg_file = pkg_file.rsplit('/', 1)[-1]
             path = os.path.join(dst_base_path, pkg_file)
