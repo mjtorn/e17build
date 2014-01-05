@@ -46,14 +46,14 @@ class E17Builder(EnlightenmentBuilder):
         packages = {}
 
         for path in self.build_order:
-            # XXX: Maybe some day this will be moved to rel
-            if path == 'enlightenment':
+            # XXX: Maybe some day these will be moved to rel
+            if not '/' in path:
                 url = '%s%s' % (mirror, '/releases/')
                 url = pq(url)
 
                 links = url('a')
                 links = [l for l in links if utils.is_interesting(l)]
-                links = [l for l in links if 'enlightenment' in l.attrib['href'] and not '0.18' in l.attrib['href']]
+                links = [l for l in links if path in l.attrib['href'] and not '0.18' in l.attrib['href']]
                 links = map(pq, links)
                 links.sort(cmp=utils.pkg_name_sort)
             else:
