@@ -21,7 +21,7 @@ Usage:
   e17build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--no-python] [--no-clean] [--rebuild]
 
 Options:
-  -m <url>, --mirror=<url>      Where to download from [default: http://download.enlightenment.org/releases/]
+  -m <url>, --mirror=<url>      Where to download from [default: http://download.enlightenment.org/]
   -s <path>, --srcpath=<path>   Where to download to [default: %(srcdir)s]
   -i <path>, --instpath=<path>  Where to install to [default: %(instpath)s]
   -t <n>, --thread-count=<n>    How many threads to (try to) use in compiling [default: %(thread_count)d]
