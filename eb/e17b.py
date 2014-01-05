@@ -36,9 +36,8 @@ class E17Builder(EnlightenmentBuilder):
         self.build_order = BUILD_ORDER
         self.skip_build = None
 
-    def get_package_dict(self, mirror, prepend=None):
+    def get_package_dict(self, mirror):
         """Which packages are available in mirror?
-        ``prepend`` eg. 'BINDINGS/python' (without slashes)
         """
 
         print 'Getting from URL %s' % mirror
@@ -156,9 +155,9 @@ class E17Builder(EnlightenmentBuilder):
         package_dict = self.get_package_dict(mirror)
 
         if not args['--no-python']:
-            python_mirror = '%s/BINDINGS/python/' % args['--mirror']
+            python_mirror = '%s/rel/bindings/python/' % args['--mirror']
 
-            package_dict.update(self.get_package_dict(python_mirror, prepend='BINDINGS/python'))
+            package_dict.update(self.get_package_dict(python_mirror))
 
         clean = not args['--no-clean']
         rebuild = args['--rebuild']
