@@ -55,8 +55,6 @@ class E17Builder(EnlightenmentBuilder):
                 links = url('a')
                 links = [l for l in links if utils.is_interesting(l)]
                 links = [l for l in links if path in l.attrib['href'] and not '0.18' in l.attrib['href']]
-                links = map(pq, links)
-                links.sort(cmp=utils.pkg_name_sort)
             else:
                 path = pkg_path
 
@@ -64,8 +62,10 @@ class E17Builder(EnlightenmentBuilder):
                 url = pq(url)
 
                 links = url('a')
-                links = [pq(l) for l in links if utils.is_interesting(l)]
-                links.sort(cmp=utils.pkg_name_sort)
+                links = [l for l in links if utils.is_interesting(l)]
+
+            links = map(pq, links)
+            links.sort(cmp=utils.pkg_name_sort)
 
             g = itertools.groupby(links, utils.name_from_link)
 
