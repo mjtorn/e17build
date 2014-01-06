@@ -50,21 +50,22 @@ class E17Builder(EnlightenmentBuilder):
                 path = '/releases/'
 
                 url = '%s%s' % (mirror, path)
-                url = pq(url)
+                open_url = pq(url)
 
-                links = url('a')
+                links = open_url('a')
                 links = [l for l in links if utils.is_interesting(l)]
                 links = [l for l in links if pkg_path in l.attrib['href'] and not '0.18' in l.attrib['href']]
             else:
                 path = pkg_path
 
                 url = '%s%s' % (mirror, path)
-                url = pq(url)
+                open_url = pq(url)
 
-                links = url('a')
+                links = open_url('a')
                 links = [l for l in links if utils.is_interesting(l)]
 
             links = map(pq, links)
+            assert len(links) > 0, 'Check your url: %s' % url
             links.sort(cmp=utils.pkg_name_sort)
 
             g = itertools.groupby(links, utils.name_from_link)
