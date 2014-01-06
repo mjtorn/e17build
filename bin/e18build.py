@@ -19,7 +19,7 @@ __doc__ = """
 E17 builder
 
 Usage:
-  e18build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--no-python] [--no-clean] [--rebuild]
+  e18build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--no-clean] [--rebuild]
 
 Options:
   -m <url>, --mirror=<url>      Where to download from [default: http://download.enlightenment.org/]
