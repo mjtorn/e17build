@@ -29,8 +29,10 @@ class EnlightenmentBuilder(object):
         if os.path.exists(os.path.join(src_dir, 'setup.py')):
             utils.run(setup_py_cmd, src_dir)
         else:
+            # XXX: Should be passed in from a conf section somewhere
             if '/efl-' in src_dir:
                 utils.run(aclocal_cmd, src_dir)
+                autogen_cmd += ['--with-mount', '--with-umount']
 
             if os.path.exists(os.path.join(src_dir, 'autogen.sh')):
                 utils.run(autogen_cmd, src_dir)
