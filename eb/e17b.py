@@ -115,8 +115,10 @@ class E17Builder(EnlightenmentBuilder):
         print 'Packages: %s' % ', '.join(self.build_order)
 
         # TODO: Maybe store only the latest version in packages dict after download
-        for pkg in self.build_order:
-            pkg_file = packages[pkg][-1]
+        pkgs = [pkg.rsplit('/', 1)[-1] for pkg in self.build_order]
+        for pkg in pkgs:
+            pkg_path, pkg_list = packages[pkg]
+            pkg_file = pkg_list[-1]
             pkg_file = pkg_file.rsplit('/', 1)[-1]
             path = os.path.join(dst_base_path, pkg_file)
             print path
