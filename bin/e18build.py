@@ -11,7 +11,7 @@ from eb import utils
 DEFAULTS = {
     'srcdir': os.path.join(os.path.expanduser('~'), 'src', 'e18'),
     'instpath': os.path.join(os.path.expanduser('~'), 'e18'),
-    'thread_count': e18b.utils.get_thread_count()
+    'thread_count': utils.get_thread_count()
 }
 
 # Why do I have to assign this manually?
