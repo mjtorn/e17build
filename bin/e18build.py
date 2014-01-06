@@ -16,7 +16,7 @@ DEFAULTS = {
 
 # Why do I have to assign this manually?
 __doc__ = """
-E17 builder
+E18 builder
 
 Usage:
   e18build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--no-clean] [--rebuild]
