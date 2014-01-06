@@ -190,10 +190,10 @@ class EnlightenmentBuilder(object):
         print 'sudo chmod u+s,a+x the %s/lib/enlightenment/modules/cpufreq/ARCH-VER/freqset' % instpath
         print
         print 'sudo chown root:root %s/lib/enlightenment/utils/enlightenment_backlight' % instpath
-        print 'sudo chmod u+s,a+x the %s/lib/enlightenment/utils/enlightenment_backlight' % instpath
+        print 'sudo chmod u+s,a+x %s/lib/enlightenment/utils/enlightenment_backlight' % instpath
         print
         print 'sudo chown root:root %s/lib/enlightenment/utils/enlightenment_sys' % instpath
-        print 'sudo chmod u+s,a+x the %s/lib/enlightenment/utils/enlightenment_sys' % instpath
+        print 'sudo chmod u+s,a+x %s/lib/enlightenment/utils/enlightenment_sys' % instpath
 
 # EOF
 
