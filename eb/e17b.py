@@ -110,6 +110,10 @@ class E17Builder(EnlightenmentBuilder):
         # Hack around a potential symlink situation
         if not os.path.exists(instpath):
             os.mkdir(instpath)
+        # And we need aclocal
+        if not os.path.exists(os.path.join(instpath, 'share', 'aclocal')):
+            os.mkdir(os.path.join(instpath, 'share'))
+            os.mkdir(os.path.join(instpath, 'share', 'aclocal'))
 
         utils.setup_environment(instpath)
 
