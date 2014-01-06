@@ -24,7 +24,7 @@ class EnlightenmentBuilder(object):
         conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
         make_cmd = ['make', '-j%d' % thread_count]
         install_cmd = ['make', 'install']
-        setup_py_cmd = ['python', 'setup.py', '--prefix=%s/python/' % dst_dir]
+        setup_py_cmd = ['python', 'setup.py', 'install', '--prefix=%s/python/' % dst_dir]
 
         if os.path.exists(os.path.join(src_dir, 'setup.py')):
             utils.run(setup_py_cmd, src_dir)
