@@ -15,26 +15,11 @@ import urllib2
 DOWNLOAD_RETRIES = 3
 DOWNLOAD_TIMEOUT = 10
 
-IGNORE = (
-    'enlightenment-0.18.0', 'efl', '1.8.0',
-    'terminology-0.4.0'
-)
-
-def is_ignored(link):
-    """Skip some e18 stuff for now
-    """
-
-    for part in IGNORE:
-        if part in link.attrib['href']:
-            return True
-
-    return False
-
 def is_interesting(link):
     """Look at link and see if we want take note of it
     """
 
-    return '.tar' in link.attrib['href'] and link.attrib['href'].endswith('bz2')
+    return '.tar' in link.attrib['href'] and (link.attrib['href'].endswith('bz2') or link.attrib['href'].endswith('gz'))
 
 def name_from_link(link):
     """Extract package name from link
