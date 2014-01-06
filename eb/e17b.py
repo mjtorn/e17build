@@ -122,6 +122,10 @@ class E17Builder(EnlightenmentBuilder):
         # TODO: Maybe store only the latest version in packages dict after download
         pkgs = [pkg.rsplit('/', 1)[-1] for pkg in self.build_order]
         for pkg in pkgs:
+            # XXX: hate special case
+            if pkg == 'python':
+                pkg = 'python-efl'
+
             pkg_path, pkg_list = packages[pkg]
             pkg_file = pkg_list[-1]
             pkg_file = pkg_file.rsplit('/', 1)[-1]
