@@ -2,11 +2,13 @@
 
 BUILD_ORDER = (
     # libs
-    'efl', 'elementary', 'emotion_generic_players', 'evas_generic_loaders', 'webkit-efl',
+    'rel/libs/efl', 'rel/libs/evas_generic_loaders', 'rel/libs/emotion_generic_players', 'rel/libs/elementary',
+    'e_dbus',
     # apps
-    'enlightenment', 'econnman', 'enventor', 'terminology',
+    'rel/apps/enlightenment', 'rel/apps/econnman', 'rel/apps/enventor', 'rel/apps/terminology',
+    'etrophy', 'echievements', 'elemines',
     # bindings
-    'python-efl',
+    'rel/bindings/python',
 )
 
 # EOF
