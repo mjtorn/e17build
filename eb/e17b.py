@@ -175,7 +175,16 @@ class E17Builder(EnlightenmentBuilder):
         print 'DONE!'
 
         print
-        print '(Remember to chown root and chmod u+s,a+x the freqset executable)'
+        print 'Remember to do the following:'
+        print
+        print 'sudo chown root:root %s/lib/enlightenment/modules/cpufreq/ARCH-VER/freqset' % instpath
+        print 'sudo chmod u+s,a+x the %s/lib/enlightenment/modules/cpufreq/ARCH-VER/freqset' % instpath
+        print
+        print 'sudo chown root:root %s/lib/enlightenment/utils/enlightenment_backlight' % instpath
+        print 'sudo chmod u+s,a+x the %s/lib/enlightenment/utils/enlightenment_backlight' % instpath
+        print
+        print 'sudo chown root:root %s/lib/enlightenment/utils/enlightenment_sys' % instpath
+        print 'sudo chmod u+s,a+x the %s/lib/enlightenment/utils/enlightenment_sys' % instpath
 
 # EOF
 
