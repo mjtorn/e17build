@@ -80,7 +80,7 @@ Note the defaults are dynamically generated and may differ for you.
 
 And for your .xsessionrc or whatever you prefer::
 
-  export PATH=$HOME/e18/bin:$PATH
+  export PATH=$HOME/e18/bin:$HOME/e18/python/bin/:$PATH
   export LD_LIBRARY_PATH=$HOME/e18/lib:$LD_LIBRARY_PATH
   export PYTHONPATH=$HOME/e18/python/lib/python2.7/site-packages:$PYTHONPATH
 
