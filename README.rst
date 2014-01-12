@@ -60,13 +60,13 @@ Help?
 By all means! Pull requests and such are more than welcome.
 
 Oh you meant this help::
-  
+
   (e17build)mjt@ishtar:~/src/git_checkouts/e17build (master *)$ bin/e18build.py --help
   E18 builder
-  
+
   Usage:
     e18build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--no-clean] [--rebuild]
-  
+
   Options:
     -m <url>, --mirror=<url>      Where to download from [default: http://download.enlightenment.org/]
     -s <path>, --srcpath=<path>   Where to download to [default: /home/mjt/src/e18]
@@ -78,11 +78,13 @@ Oh you meant this help::
 
 Note the defaults are dynamically generated and may differ for you.
 
-And for your .xinitrc or whatever you prefer::
+And for your .xsessionrc or whatever you prefer::
 
   export PATH=$HOME/e18/bin:$PATH
   export LD_LIBRARY_PATH=$HOME/e18/lib:$LD_LIBRARY_PATH
-  export PYTHONPATH=$HOME/e18/lib/python2.6/site-packages:$PYTHONPATH
-  
+  export PYTHONPATH=$HOME/e18/python/lib/python2.7/site-packages:$PYTHONPATH
+
   exec $HOME/e18/bin/enlightenment_start
+
+(The PATH setting does not work for me, I need it in .profile but it might be different for you)
 
