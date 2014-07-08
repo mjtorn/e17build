@@ -42,7 +42,11 @@ class EnlightenmentBuilder(object):
                 open_url = pq(url)
 
                 links = open_url('a')
-                links = [l for l in links if utils.is_interesting(l)]
+                # XXX: Another hack, this time to figure out the version
+                if pkg_path == 'rel/apps/enlightenment':
+                    links = [l for l in links if utils.is_interesting(l) and self.version in l.attrib['href']]
+                else:
+                    links = [l for l in links if utils.is_interesting(l)]
 
             links = map(pq, links)
             assert len(links) > 0, 'Check your url: %s' % url
