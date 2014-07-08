@@ -23,7 +23,7 @@ class E18Builder(EnlightenmentBuilder):
         """
 
         self.args = args
-        self.build_order = BUILD_ORDER
+        self.build_order = args['PACKAGE'] or BUILD_ORDER
 
 # EOF
 
