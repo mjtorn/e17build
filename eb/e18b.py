@@ -7,8 +7,6 @@ BUILD_ORDER = (
     'rel/libs/efl', 'rel/libs/evas_generic_loaders', 'rel/libs/emotion_generic_players', 'rel/libs/elementary',
     # apps
     'rel/apps/enlightenment', 'rel/apps/econnman', 'rel/apps/enventor', 'rel/apps/terminology',
-    # 'etrophy', 'echievements', 'elemines',
-    'etrophy', 'elemines',
     # bindings
     'rel/bindings/python',
 )
