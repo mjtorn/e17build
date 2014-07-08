@@ -18,6 +18,8 @@ class E17Builder(EnlightenmentBuilder):
     """Build e17
     """
 
+    version = '0.17'
+
     def __init__(self, args, build_order=BUILD_ORDER):
         """Set kwargs from this file
         """

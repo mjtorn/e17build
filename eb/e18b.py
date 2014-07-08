@@ -15,6 +15,8 @@ class E18Builder(EnlightenmentBuilder):
     """Build e18
     """
 
+    version = '0.18'
+
     def __init__(self, args, build_order=BUILD_ORDER):
         """Set kwargs from this file
         """
