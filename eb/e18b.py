@@ -8,7 +8,8 @@ BUILD_ORDER = (
     'e_dbus',
     # apps
     'rel/apps/enlightenment', 'rel/apps/econnman', 'rel/apps/enventor', 'rel/apps/terminology',
-    'etrophy', 'echievements', 'elemines',
+    # 'etrophy', 'echievements', 'elemines',
+    'etrophy', 'elemines',
     # bindings
     'rel/bindings/python',
 )
