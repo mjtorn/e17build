@@ -161,7 +161,7 @@ def run(cmd, dir_):
     if retval != 0:
         raise RuntimeError('%s exited %d' % (' '.join(cmd), retval))
 
-def setup_environment(dst_dir):
+def setup_environment(dst_dir, debug=False):
     """Sets the build environment. Based on easy_e17.sh
     """
 
@@ -190,10 +190,17 @@ def setup_environment(dst_dir):
     aclocal_flags = '-I %s %s' % (aclocal_path, aclocal_flags)
     os.environ['ACLOCAL_FLAGS'] = aclocal_flags.strip()
 
-    cpp_path = os.path.join(dst_dir, 'include')
-    cpp_flags = os.environ.get('CPPFLAGS', '')
-    cpp_flags = '%s -I%s' % (cpp_flags, cpp_path)
-    os.environ['CPPFLAGS'] = cpp_flags.strip()
+    c_path = os.path.join(dst_dir, 'include')
+    c_flags = os.environ.get('CFLAGS', '')
+    c_flags = '%s -I%s' % (c_flags, c_path)
+    if debug:
+        c_flags = '%s -g -ggdb3 -O0' % c_flags
+
+        cxx_flags = os.environ.get('CXXFLAGS', '')
+        cxx_flags = '%s -g -ggdb3 -O0' % cxx_flags
+        os.environ['CXXFLAGS'] = cxx_flags.strip()
+
+    os.environ['CFLAGS'] = c_flags.strip()
 
     ld_path = os.path.join(dst_dir, 'lib')
     ld_flags = os.environ.get('LDFLAGS', '')

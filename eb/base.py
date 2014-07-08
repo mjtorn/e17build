@@ -83,7 +83,7 @@ class EnlightenmentBuilder(object):
             else:
                 utils.download(url, dst_file)
 
-    def build_packages(self, packages, dst_base_path, instpath, thread_count=1, clean=True, rebuild=False):
+    def build_packages(self, packages, dst_base_path, instpath, thread_count=1, clean=True, rebuild=False, debug=False):
         """Builder. Contains extraction too.
         """
 
@@ -98,7 +98,7 @@ class EnlightenmentBuilder(object):
             os.mkdir(os.path.join(instpath, 'share'))
             os.mkdir(os.path.join(instpath, 'share', 'aclocal'))
 
-        utils.setup_environment(instpath)
+        utils.setup_environment(instpath, debug=debug)
 
         print 'Packages: %s' % ', '.join(self.build_order)
 
@@ -179,10 +179,12 @@ class EnlightenmentBuilder(object):
         if rebuild:
             clean = False
 
+        debug = args['--debug']
+
         # TODO: Do not assume new packages have been released
         # ie. populate package_dict with what's downloaded if rebuild is True
         self.download_packages(src_dir, mirror, package_dict)
-        self.build_packages(package_dict, src_dir, instpath, thread_count=thread_count, clean=clean, rebuild=rebuild)
+        self.build_packages(package_dict, src_dir, instpath, thread_count=thread_count, clean=clean, rebuild=rebuild, debug=debug)
 
         print
         print 'DONE!'
@@ -191,7 +193,7 @@ class EnlightenmentBuilder(object):
         print 'Remember to do the following:'
         print
         print 'sudo chown root:root %s/lib/enlightenment/modules/cpufreq/ARCH-VER/freqset' % instpath
-        print 'sudo chmod u+s,a+x the %s/lib/enlightenment/modules/cpufreq/ARCH-VER/freqset' % instpath
+        print 'sudo chmod u+s,a+x %s/lib/enlightenment/modules/cpufreq/ARCH-VER/freqset' % instpath
         print
         print 'sudo chown root:root %s/lib/enlightenment/utils/enlightenment_backlight' % instpath
         print 'sudo chmod u+s,a+x %s/lib/enlightenment/utils/enlightenment_backlight' % instpath
