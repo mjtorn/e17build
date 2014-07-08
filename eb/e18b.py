@@ -1,4 +1,4 @@
-# vim: encoding: utf-8
+# vim: fileencoding: utf-8
 
 from .base import EnlightenmentBuilder
 
