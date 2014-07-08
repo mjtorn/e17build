@@ -19,7 +19,7 @@ __doc__ = """
 E18 builder
 
 Usage:
-  e18build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--no-clean] [--rebuild]
+  e18build.py [--mirror=<url>] [--srcpath=<path>] [--instpath=<path>] [--thread-count=<n>] [--no-clean] [--rebuild] [PACKAGE...]
 
 Options:
   -m <url>, --mirror=<url>      Where to download from [default: http://download.enlightenment.org/]
@@ -28,6 +28,7 @@ Options:
   -t <n>, --thread-count=<n>    How many threads to (try to) use in compiling [default: %(thread_count)d]
   --no-clean                    Do not clean up old files
   --rebuild                     Rebuild sources, implies --no-clean
+  PACKAGE                       Which package(s) to build. Must comply with rel/libs/elementary format
 
 """ % DEFAULTS
 
