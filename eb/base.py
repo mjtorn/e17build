@@ -131,7 +131,7 @@ class EnlightenmentBuilder(object):
         ## XXX: The later additions mostly untested.
         aclocal_cmd = ['aclocal']
         autogen_cmd = ['./autogen.sh', '--prefix=%s' % dst_dir]
-        conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
+        conf_cmd = ['./configure', '--prefix=%s' % dst_dir, '--disable-systemd']
         make_cmd = ['make', '-j%d' % thread_count]
         install_cmd = ['make', 'install']
         setup_py_cmd = ['python', 'setup.py', 'install', '--prefix=%s/python/' % dst_dir]
