@@ -169,6 +169,7 @@ def setup_environment(dst_dir, debug=False):
         ('PATH', os.path.join(dst_dir, 'bin')),
         ('LD_LIBRARY_PATH', os.path.join(dst_dir, 'lib')),
         ('PKG_CONFIG_PATH', os.path.join(dst_dir, 'lib', 'pkgconfig')),
+        ('XDG_DATA_DIRS', os.path.join(dst_dir, 'share')),
     )
 
     # This is mostly to work through my crap, but it doesn't kill anything
