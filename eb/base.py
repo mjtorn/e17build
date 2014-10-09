@@ -1,5 +1,7 @@
 # vim: fileencoding=utf-8
 
+from collections import OrderedDict
+
 from cStringIO import StringIO
 
 from pyquery import PyQuery as pq
@@ -22,7 +24,7 @@ class EnlightenmentBuilder(object):
 
         print 'Getting from URL %s' % mirror
 
-        packages = {}
+        packages = OrderedDict()
 
         for pkg_path in self.build_order:
             # XXX: Maybe some day these will be moved to rel
@@ -129,7 +131,7 @@ class EnlightenmentBuilder(object):
         """
 
         ## XXX: The later additions mostly untested.
-        aclocal_cmd = ['aclocal']
+        # aclocal_cmd = ['aclocal']
         autogen_cmd = ['./autogen.sh', '--prefix=%s' % dst_dir]
         conf_cmd = ['./configure', '--prefix=%s' % dst_dir, '--disable-systemd']
         make_cmd = ['make', '-j%d' % thread_count]
@@ -141,7 +143,7 @@ class EnlightenmentBuilder(object):
         else:
             # XXX: Should be passed in from a conf section somewhere
             if '/efl-' in src_dir:
-                utils.run(aclocal_cmd, src_dir)
+                # utils.run(aclocal_cmd, src_dir)
                 autogen_cmd += ['--with-mount', '--with-umount']
 
             if os.path.exists(os.path.join(src_dir, 'autogen.sh')):
@@ -200,6 +202,8 @@ class EnlightenmentBuilder(object):
         print
         print 'sudo chown root:root %s/lib/enlightenment/utils/enlightenment_sys' % instpath
         print 'sudo chmod u+s,a+x %s/lib/enlightenment/utils/enlightenment_sys' % instpath
+        print
+        print 'sudo ln -s %s/share/dbus-1/services/* /usr/share/dbus-1/services/' % instpath
 
 # EOF
 
