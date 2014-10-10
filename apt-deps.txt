@@ -43,7 +43,7 @@ libasound2 libasound2-dev
 libpoppler46 libpoppler-dev
 libraw10 libraw-dev
 libspectre1 libspectre-dev
-libgstreamer1.0-0 libgstreamer1.0-dev gstreamer1.0-plugins-good gstreamer1.0-plugins-bad libgstreamer-plugins-base1.0-dev
+libgstreamer1.0-0 libgstreamer1.0-dev gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libgstreamer-plugins-base1.0-dev gstreamer1.0-libav
 libxine2 libxine2-dev
 libvlc5 libvlc-dev
 libluajit-5.1-2 libluajit-5.1-dev
