@@ -41,6 +41,7 @@ class EnlightenmentBuilder(object):
                 path = pkg_path
 
                 url = '%s%s' % (mirror, path)
+                print '  %s' % url
                 open_url = pq(url)
 
                 links = open_url('a')
