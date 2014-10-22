@@ -110,8 +110,14 @@ class EnlightenmentBuilder(object):
             # XXX: hate special case
             if pkg == 'python':
                 pkg = 'python-efl'
+            elif pkg == 'webkit-efl':
+                pkg = 'ewebkit'
 
-            pkg_path, pkg_list = packages[pkg]
+            try:
+                pkg_path, pkg_list = packages[pkg]
+            except KeyError:
+                print packages.keys()
+                raise
             pkg_file = pkg_list[-1]
             pkg_file = pkg_file.rsplit('/', 1)[-1]
             path = os.path.join(dst_base_path, pkg_file)
