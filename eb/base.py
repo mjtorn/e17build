@@ -133,7 +133,7 @@ class EnlightenmentBuilder(object):
         ## XXX: The later additions mostly untested.
         # aclocal_cmd = ['aclocal']
         autogen_cmd = ['./autogen.sh', '--prefix=%s' % dst_dir]
-        conf_cmd = ['./configure', '--prefix=%s' % dst_dir, '--disable-systemd']
+        conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
         make_cmd = ['make', '-j%d' % thread_count]
         install_cmd = ['make', 'install']
         setup_py_cmd = ['python', 'setup.py', 'install', '--prefix=%s/python/' % dst_dir]
@@ -145,6 +145,12 @@ class EnlightenmentBuilder(object):
             if '/efl-' in src_dir:
                 # utils.run(aclocal_cmd, src_dir)
                 autogen_cmd += ['--with-mount', '--with-umount']
+                if os.path.exists('/bin/systemd'):
+                    autogen_cmd.append('--enable-systemd')
+            elif '/enlightement-' in src_dir:
+                autogen_cmd += ['--enable-mount-eeze']
+                if not os.path.exists('/bin/systemd'):
+                    autogen_cmd.append('--disable-systemd')
 
             if os.path.exists(os.path.join(src_dir, 'autogen.sh')):
                 utils.run(autogen_cmd, src_dir)
@@ -204,6 +210,7 @@ class EnlightenmentBuilder(object):
         print 'sudo chmod u+s,a+x %s/lib/enlightenment/utils/enlightenment_sys' % instpath
         print
         print 'sudo ln -s %s/share/dbus-1/services/* /usr/share/dbus-1/services/' % instpath
+
 
 # EOF
 
