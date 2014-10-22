@@ -36,7 +36,7 @@ class EnlightenmentBuilder(object):
 
                 links = open_url('a')
                 links = [l for l in links if utils.is_interesting(l)]
-                links = [l for l in links if pkg_path in l.attrib['href'] and not '0.18' in l.attrib['href']]
+                links = [l for l in links if pkg_path in l.attrib['href'] and not self.version in l.attrib['href']]
             else:
                 path = pkg_path
 
