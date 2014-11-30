@@ -36,7 +36,7 @@ class EnlightenmentBuilder(object):
 
                 links = open_url('a')
                 links = [l for l in links if utils.is_interesting(l)]
-                links = [l for l in links if pkg_path in l.attrib['href'] and not '0.18' in l.attrib['href']]
+                links = [l for l in links if pkg_path in l.attrib['href'] and not self.version in l.attrib['href']]
             else:
                 path = pkg_path
 
@@ -110,8 +110,14 @@ class EnlightenmentBuilder(object):
             # XXX: hate special case
             if pkg == 'python':
                 pkg = 'python-efl'
+            elif pkg == 'webkit-efl':
+                pkg = 'ewebkit'
 
-            pkg_path, pkg_list = packages[pkg]
+            try:
+                pkg_path, pkg_list = packages[pkg]
+            except KeyError:
+                print packages.keys()
+                raise
             pkg_file = pkg_list[-1]
             pkg_file = pkg_file.rsplit('/', 1)[-1]
             path = os.path.join(dst_base_path, pkg_file)
@@ -133,7 +139,7 @@ class EnlightenmentBuilder(object):
         ## XXX: The later additions mostly untested.
         # aclocal_cmd = ['aclocal']
         autogen_cmd = ['./autogen.sh', '--prefix=%s' % dst_dir]
-        conf_cmd = ['./configure', '--prefix=%s' % dst_dir, '--disable-systemd']
+        conf_cmd = ['./configure', '--prefix=%s' % dst_dir]
         make_cmd = ['make', '-j%d' % thread_count]
         install_cmd = ['make', 'install']
         setup_py_cmd = ['python', 'setup.py', 'install', '--prefix=%s/python/' % dst_dir]
@@ -145,6 +151,12 @@ class EnlightenmentBuilder(object):
             if '/efl-' in src_dir:
                 # utils.run(aclocal_cmd, src_dir)
                 autogen_cmd += ['--with-mount', '--with-umount']
+                if os.path.exists('/bin/systemd'):
+                    autogen_cmd.append('--enable-systemd')
+            elif '/enlightement-' in src_dir:
+                autogen_cmd += ['--enable-mount-eeze']
+                if not os.path.exists('/bin/systemd'):
+                    autogen_cmd.append('--disable-systemd')
 
             if os.path.exists(os.path.join(src_dir, 'autogen.sh')):
                 utils.run(autogen_cmd, src_dir)
