@@ -100,7 +100,7 @@ class EnlightenmentBuilder(object):
             os.mkdir(os.path.join(instpath, 'share'))
             os.mkdir(os.path.join(instpath, 'share', 'aclocal'))
 
-        utils.setup_environment(instpath, debug=debug)
+        utils.setup_environment(instpath, self.version, debug=debug)
 
         print 'Packages: %s' % ', '.join(self.build_order)
 

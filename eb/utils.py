@@ -161,7 +161,7 @@ def run(cmd, dir_):
     if retval != 0:
         raise RuntimeError('%s exited %d' % (' '.join(cmd), retval))
 
-def setup_environment(dst_dir, debug=False):
+def setup_environment(dst_dir, version, debug=False):
     """Sets the build environment. Based on easy_e17.sh
     """
 
@@ -176,7 +176,7 @@ def setup_environment(dst_dir, debug=False):
     for env_var, path in paths:
         env_val = os.environ.get(env_var, '')
         env_vals = env_val.split(':')
-        env_vals = [val for val in env_vals if not 'e17' in val]
+        env_vals = [val for val in env_vals if not 'e%s' % version in val]
         env_vals.insert(0, path)
 
         os.environ[env_var] = ':'.join(env_vals)
