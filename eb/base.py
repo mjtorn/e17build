@@ -151,9 +151,9 @@ class EnlightenmentBuilder(object):
             # XXX: Should be passed in from a conf section somewhere
             if '/efl-' in src_dir:
                 # utils.run(aclocal_cmd, src_dir)
-                autogen_cmd += ['--with-mount', '--with-umount']
+                conf_cmd += ['--with-mount', '--with-umount']  #, '--disable-pulseaudio', '--enable-i-really-know-what-i-am-doing-and-that-this-will-probably-break-things-and-i-will-fix-them-myself-and-send-patches-aba']
                 if os.path.exists('/bin/systemd'):
-                    autogen_cmd.append('--enable-systemd')
+                    conf_cmd.append('--enable-systemd')
             elif '/enlightement-' in src_dir:
                 autogen_cmd += ['--enable-mount-eeze']
                 if not os.path.exists('/bin/systemd'):
@@ -162,7 +162,11 @@ class EnlightenmentBuilder(object):
             if os.path.exists(os.path.join(src_dir, 'autogen.sh')):
                 utils.run(autogen_cmd, src_dir)
             elif os.path.exists(os.path.join(src_dir, 'configure')):
-                utils.run(conf_cmd, src_dir)
+                try:
+                    utils.run(conf_cmd, src_dir)
+                except Exception:
+                    print src_dir, conf_cmd
+                    raise
             else:
                 raise RuntimeError('Nothing found to do in %s' % src_dir)
 
