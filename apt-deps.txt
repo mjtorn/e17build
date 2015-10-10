@@ -54,4 +54,11 @@ libmount1 libmount-dev util-linux
 libssl1.0.0 libssl-dev
 libcurl4-openssl-dev libcurl3 curl
 libpulse0 libpulse-dev
+libsystemd-daemon0 libsystemd-daemon-dev
+libsystemd-login0 libsystemd-login-dev
+libsystemd-journal-dev libsystemd-journal0
+libtool
+python-distutils-extra
+python-dbus
+python-dev
 
