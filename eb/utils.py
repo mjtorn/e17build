@@ -19,7 +19,11 @@ def is_interesting(link):
     """Look at link and see if we want take note of it
     """
 
-    return '.tar' in link.attrib['href'] and (link.attrib['href'].endswith('bz2') or link.attrib['href'].endswith('gz'))
+    is_tar = '.tar' in link.attrib['href']
+    is_compressed = (link.attrib['href'].endswith('bz2') or link.attrib['href'].endswith('gz'))
+    is_not_alpha_beta = 'alpha' not in link.attrib['href'] and 'beta' not in link.attrib['href']
+
+    return is_tar and is_compressed and is_not_alpha_beta
 
 def name_from_link(link):
     """Extract package name from link
