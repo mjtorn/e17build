@@ -2,7 +2,7 @@ connman
 autoconf
 doxygen
 libgettextpo0 libgettextpo-dev gettext
-libgcrypt11 libgcrypt11-dev
+libgcrypt20 libgcrypt20-dev
 libsndfile1 libsndfile1-dev
 libpam0g libpam-dev
 libflac8 libflac-dev
@@ -15,7 +15,7 @@ libfribidi0 libfribidi-dev
 libharfbuzz0b libharfbuzz-dev
 libgl1-mesa-glx libgl1-mesa-dev
 libpng12-0 libpng12-dev
-libjpeg9 libjpeg9-dev
+libjpeg62-turbo libjpeg62-turbo-dev
 libtiff5 libtiff5-dev
 libgif4 libgif-dev
 librsvg2-2 librsvg2-dev
